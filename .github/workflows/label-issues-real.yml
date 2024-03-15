@@ -7,11 +7,16 @@ jobs:
   assign-label:
     runs-on: ubuntu-latest
     steps:
+      - name: Check data
+        if: contains(github.event.issue.title, 'bug')
+        run: |
+          echo "Repo: ${{ github.repository }}"
+          echo "Repo: ${{ github.repository_owner }}"
       - name: Assign label
         if: contains(github.event.issue.title, 'bug')
         run: |
           curl -X POST \
-          --url https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
+          --url https://api.github.com/repos/${{ github.repository_owner }}/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels \
           -H 'authorization: Bearer ${{ secrets.TOKEN }}' \
           -H 'content-type: application/json' \
           -d '{
